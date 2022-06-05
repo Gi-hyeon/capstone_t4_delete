@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fauth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -59,7 +60,7 @@ class _UserPageState extends State<UserPage> {
    
   Widget buildUser(User user) => Container(
     margin: const EdgeInsets.all(2),
-    padding: const EdgeInsets.all(2),
+    padding: const EdgeInsets.only(left: 22),
     decoration: BoxDecoration(
       border: Border.all(
         color: Color(0xffb3b9ed),
@@ -68,57 +69,78 @@ class _UserPageState extends State<UserPage> {
       borderRadius: BorderRadius.circular(7),
       
     ),
-    child: Column(
+    child: Row(
       children: [
-      Text("일정 제목 : ${user.title}",
-      style: TextStyle(
-        fontFamily: 'Noto_Serif_KR',
-        color: AppColors.black,
-        fontSize: 15.0,
-        fontWeight: FontWeight.bold,
-      ),
-      ),
-      Text("시작 날짜 : ${user.startDate.toIso8601String()}",
-      style: TextStyle(
-        fontFamily: 'Noto_Serif_KR',
-        color: AppColors.black,
-        fontSize: 15.0,
-        fontWeight: FontWeight.bold,
-      ),
-      ),
-      Text("종료 날짜 ${user.endDate.toIso8601String()}",
-      style: TextStyle(
-        fontFamily: 'Noto_Serif_KR',
-        color: AppColors.black,
-        fontSize: 15.0,
-        fontWeight: FontWeight.bold,
-      ),
-      ),
-      Text("시작 시간 : ${user.startTime.toIso8601String()}",
-      style: TextStyle(
-        fontFamily: 'Noto_Serif_KR',
-        color: AppColors.black,
-        fontSize: 15.0,
-        fontWeight: FontWeight.bold,
-      ),
-      ),
-      Text("종료 시간 : ${user.endTime.toIso8601String()}",
-      style: TextStyle(
-        fontFamily: 'Noto_Serif_KR',
-        color: AppColors.black,
-        fontSize: 15.0,
-        fontWeight: FontWeight.bold,
-      ),
-      ),
-      Text("세부사항 : ${user.description}",
-      style: TextStyle(
-        fontFamily: 'Noto_Serif_KR',
-        color: AppColors.black,
-        fontSize: 15.0,
-        fontWeight: FontWeight.bold,
-      ),
-      ),
-      SizedBox(height: 10,)
+        Column(
+          children: [
+          Text("id : ${user.id}",
+          style: TextStyle(
+            fontFamily: 'Noto_Serif_KR',
+            color: AppColors.black,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+          Text("일정 제목 : ${user.title}",
+          style: TextStyle(
+            fontFamily: 'Noto_Serif_KR',
+            color: AppColors.black,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+          Text("시작 날짜 : ${user.startDate.toIso8601String()}",
+          style: TextStyle(
+            fontFamily: 'Noto_Serif_KR',
+            color: AppColors.black,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+          Text("종료 날짜 ${user.endDate.toIso8601String()}",
+          style: TextStyle(
+            fontFamily: 'Noto_Serif_KR',
+            color: AppColors.black,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+          Text("시작 시간 : ${user.startTime.toIso8601String()}",
+          style: TextStyle(
+            fontFamily: 'Noto_Serif_KR',
+            color: AppColors.black,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+          Text("종료 시간 : ${user.endTime.toIso8601String()}",
+          style: TextStyle(
+            fontFamily: 'Noto_Serif_KR',
+            color: AppColors.black,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+          Text("세부사항 : ${user.description}",
+          style: TextStyle(
+            fontFamily: 'Noto_Serif_KR',
+            color: AppColors.black,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+            ),
+          ),
+          ],
+        ),
+        Expanded(
+          child: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () async {
+              final docUser = FirebaseFirestore.instance.collection('${fauth.FirebaseAuth.instance.currentUser?.uid}').doc(user.id);
+              if(user.title.contains(user.title))
+              docUser.delete();
+            }, 
+          ),
+        )
       ],
     ),
   );
